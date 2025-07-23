@@ -1,0 +1,144 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.plugin.compose'
+    id 'kotlin-parcelize'
+}
+
+android {
+    namespace 'com.finesi.neuronav'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.finesi.neuronav"
+        minSdk 24
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary true
+        }
+
+        // Configuración para idiomas específicos (reduce tamaño)
+        resConfigs "es", "en"
+    }
+
+    // Configuración para generar APK universal
+    splits {
+        abi {
+            enable false // Desactiva splits por arquitectura para APK universal
+        }
+    }
+
+    buildTypes {
+        release {
+            // HABILITADO para compresión y optimización
+            minifyEnabled true
+            shrinkResources true
+            zipAlignEnabled true
+
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            // IMPORTANTE: Cambiar a signingConfig release para producción
+            signingConfig signingConfigs.debug // Cambiar por signingConfigs.release
+        }
+
+        debug {
+            minifyEnabled false
+            shrinkResources false
+        }
+    }
+
+    // Configuración para firmar APK en release (descomenta cuando tengas keystore)
+    /*
+    signingConfigs {
+        release {
+            storeFile file('path/to/your/keystore.jks')
+            storePassword 'your_store_password'
+            keyAlias 'your_key_alias'
+            keyPassword 'your_key_password'
+        }
+    }
+    */
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+
+    buildFeatures {
+        compose true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.5.14'
+    }
+
+    packaging {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+            // Excluir archivos innecesarios para reducir tamaño
+            excludes += '/META-INF/DEPENDENCIES'
+            excludes += '/META-INF/LICENSE'
+            excludes += '/META-INF/LICENSE.txt'
+            excludes += '/META-INF/NOTICE'
+            excludes += '/META-INF/NOTICE.txt'
+        }
+    }
+}
+
+dependencies {
+    // Core Android
+    implementation 'androidx.core:core-ktx:1.13.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.4'
+    implementation 'androidx.activity:activity-compose:1.9.1'
+
+    // Compose BOM - Maneja todas las versiones de Compose
+    implementation platform('androidx.compose:compose-bom:2024.06.00')
+    implementation 'androidx.compose.ui:ui'
+    implementation 'androidx.compose.ui:ui-graphics'
+    implementation 'androidx.compose.ui:ui-tooling-preview'
+    implementation 'androidx.compose.material3:material3'
+
+    // Material Icons Extended
+    implementation 'androidx.compose.material:material-icons-extended'
+
+    // Navigation
+    implementation 'androidx.navigation:navigation-compose:2.7.7'
+
+    // ViewModel y Lifecycle
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.8.4'
+    implementation 'androidx.lifecycle:lifecycle-runtime-compose:2.8.4'
+
+    // Permissions con Accompanist
+    implementation 'com.google.accompanist:accompanist-permissions:0.32.0'
+
+    // Para trabajar con archivos y documentos
+    implementation 'androidx.documentfile:documentfile:1.0.1'
+
+    // Corrutinas
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1'
+
+    // Para cargar imágenes (opcional, para preview de archivos)
+    implementation 'io.coil-kt:coil-compose:2.7.0'
+
+    // Utilidades de sistema
+    implementation 'androidx.core:core-splashscreen:1.0.1'
+
+    // Testing
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
+    androidTestImplementation platform('androidx.compose:compose-bom:2024.06.00')
+    androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
+
+    // Debug
+    debugImplementation 'androidx.compose.ui:ui-tooling'
+    debugImplementation 'androidx.compose.ui:ui-test-manifest'
+}
